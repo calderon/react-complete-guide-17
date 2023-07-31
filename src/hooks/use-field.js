@@ -18,7 +18,17 @@ const useField = (validation) => {
   const fieldReset = () => {
     setFieldValue('');
     setFieldChanged(false);    
-  }
+  };
+
+  const fieldClasses = () => {
+    const classes = ['form-control'];
+
+    if (isFieldInvalid) {
+      classes.push('invalid')
+    }
+
+    return classes.join(' ');
+  };
 
   return {
     fieldValue,
@@ -26,7 +36,8 @@ const useField = (validation) => {
     isFieldValid: !isFieldInvalid,
     fieldChangeHandler,
     fieldBlurHandler,
-    fieldReset
+    fieldReset,
+    fieldClasses: fieldClasses()
   }
 };
 

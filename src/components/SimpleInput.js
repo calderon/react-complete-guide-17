@@ -7,7 +7,8 @@ const SimpleInput = (props) => {
     isFieldValid: isNameValid,
     fieldChangeHandler: nameChangeHandler,
     fieldBlurHandler: nameBlurHandler,
-    fieldReset: nameReset
+    fieldReset: nameReset,
+    fieldClasses: nameFormClass,
   } = useField((fieldValue) => {
     return fieldValue.trim() !== '';
   });
@@ -17,7 +18,8 @@ const SimpleInput = (props) => {
     isFieldValid: isEmailValid,
     fieldChangeHandler: emailChangeHandler,
     fieldBlurHandler: emailBlurHandler,
-    fieldReset: emailReset
+    fieldReset: emailReset,
+    fieldClasses: emailFormClass,
   } = useField((fieldValue) => {
     return EmailValidator.validate(fieldValue);
   });
@@ -35,29 +37,9 @@ const SimpleInput = (props) => {
     emailReset();
   };
 
-  const nameFormClass = () => {
-    const classes = ['form-control'];
-
-    if (!isNameValid) {
-      classes.push('invalid')
-    }
-
-    return classes.join(' ');
-  };
-
-  const emailFormClass = () => {
-    const classes = ['form-control'];
-
-    if (!isEmailValid) {
-      classes.push('invalid')
-    }
-
-    return classes.join(' ');
-  };
-
   return (
     <form onSubmit={formSubmitHandler}>
-      <div className={nameFormClass()}>
+      <div className={nameFormClass}>
         <label htmlFor='name'>Your Name</label>
         <input id='name'
                type='text'
@@ -67,7 +49,7 @@ const SimpleInput = (props) => {
         {!isNameValid && <p style={{ 'color': 'red'}}>Not valid</p>}
       </div>
 
-      <div className={emailFormClass()}>
+      <div className={emailFormClass}>
         <label htmlFor='email'>Your E-mail</label>
         <input id='email'
                type='email'
