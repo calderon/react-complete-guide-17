@@ -1,49 +1,44 @@
-import { useState } from "react";
 import * as EmailValidator from 'email-validator';
+import useField from "../hooks/use-field";
 
 const SimpleInput = (props) => {
-  const [name, setName] = useState('');
-  const [isNameChanged, setNameChanged] = useState(false);
-  const [email, setEmail] = useState('');
-  const [isEmailChanged, setEmailChanged] = useState(false);
+  const {
+    fieldValue: name,
+    isFieldValid: isNameValid,
+    fieldChangeHandler: nameChangeHandler,
+    fieldBlurHandler: nameBlurHandler,
+    fieldReset: nameReset
+  } = useField((fieldValue) => {
+    return fieldValue.trim() !== '';
+  });
 
-  const nameIsValid = name.trim() !== '';
-  const isNameInvalid = !nameIsValid && isNameChanged;
-  const emailIsValid = EmailValidator.validate(email)
-  const isEmailInvalid = !emailIsValid && isEmailChanged;
+  const {
+    fieldValue: email,
+    isFieldValid: isEmailValid,
+    fieldChangeHandler: emailChangeHandler,
+    fieldBlurHandler: emailBlurHandler,
+    fieldReset: emailReset
+  } = useField((fieldValue) => {
+    return EmailValidator.validate(fieldValue);
+  });
 
-  const isFormValid = nameIsValid && emailIsValid;
-
-  const nameChangeHandler = (evt) => {
-    setName(evt.target.value);
-  };
-
-  const nameBlurHandler = (evt) => {
-    setNameChanged(true);
-  };
-
-  const emailChangeHandler = (evt) => {
-    setEmail(evt.target.value);
-  };
-
-  const emailBlurHandler = (evt) => {
-    setEmailChanged(true);
-  };
+  const isFormValid = isNameValid && isEmailValid;
 
   const formSubmitHandler = (evt) => {
     evt.preventDefault();
-    setNameChanged(true);
-    setEmailChanged(true);
 
     if (!isFormValid) {
       return;
     }
+
+    nameReset();
+    emailReset();
   };
 
   const nameFormClass = () => {
     const classes = ['form-control'];
 
-    if (isNameInvalid) {
+    if (!isNameValid) {
       classes.push('invalid')
     }
 
@@ -53,7 +48,7 @@ const SimpleInput = (props) => {
   const emailFormClass = () => {
     const classes = ['form-control'];
 
-    if (isEmailInvalid) {
+    if (!isEmailValid) {
       classes.push('invalid')
     }
 
@@ -69,7 +64,7 @@ const SimpleInput = (props) => {
                onChange={nameChangeHandler}
                onBlur={nameBlurHandler}
                value={name} />
-        {isNameInvalid && <p style={{ 'color': 'red'}}>Not valid</p>}
+        {!isNameValid && <p style={{ 'color': 'red'}}>Not valid</p>}
       </div>
 
       <div className={emailFormClass()}>
@@ -79,7 +74,7 @@ const SimpleInput = (props) => {
                onChange={emailChangeHandler}
                onBlur={emailBlurHandler}
                value={email} />
-        {isEmailInvalid && <p style={{ 'color': 'red'}}>Not valid</p>}
+        {!isEmailValid && <p style={{ 'color': 'red'}}>Not valid</p>}
       </div>
 
       <div className="form-actions">
